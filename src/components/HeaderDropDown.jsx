@@ -36,7 +36,7 @@ function HeaderDropDown({ setOpenDropdown }) {
         <div>
           {boards.map((board, index) => (
             <div
-              className={` flex items-baseline space-x-2 px-5 py-4  ${
+              className={` flex items-baseline  dark:text-white space-x-2 px-5 py-4  ${
                 board.isActive &&
                 " bg-[#635fc7] rounded-r-full text-white mr-8 "
               } `}
