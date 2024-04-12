@@ -1,14 +1,33 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import crossIcon from "../assets/icon-cross.svg";
+import { useSelector } from "react-redux";
 
 function AddEditTaskModal({ type, device, setOpenAddEditTask }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const board = useSelector((state) => state.boards).find(
+    (board) => board.isActive
+  );
+  const columns = board.columns;
+
   const [subtasks, setSubtasks] = useState([
     { title: "", isCompleted: false, id: uuidv4() },
     { title: "", isCompleted: false, id: uuidv4() },
   ]);
+
+  const onChange = (id, newValue) => {
+    setSubtasks((pervState) => {
+      const newState = [...pervState];
+      const subtask = newState.find((subtask) => subtask.id === id);
+      subtask.title = newValue;
+      return newState;
+    });
+  };
+
+  const onDelete = (id) => {
+    setSubtasks((perState) => perState.filter((el) => el.id !== id));
+  };
   return (
     <div
       onClick={(e) => {
@@ -66,17 +85,53 @@ function AddEditTaskModal({ type, device, setOpenAddEditTask }) {
           <label className="text-sm dark:text-white text-gray-500">
             Subtasks
           </label>
-          {subtasks.map((subtasks, index) => (
+          {subtasks.map((subtask, index) => (
             <div key={index} className="flex items-center w-full ">
               <input
+                onChange={(e) => {
+                  onChange(subtask.id, e.target.value);
+                }}
                 type="text"
-                value={subtasks.title}
+                value={subtask.title}
                 className="bg-transparent outline-none focus:border-0 border flex-grow px-4 py-2 rounded-md text-sm border-gray-600 focus:outline-[#635fc7]"
                 placeholder="e.g Take coffee break"
               />
-              <img src={crossIcon} alt="" />
+              <img
+                src={crossIcon}
+                onClick={() => {
+                  onDelete(subtask.id);
+                }}
+                className="m-4 cursor-pointer"
+              />
             </div>
           ))}
+          <button
+            onClick={() => {
+              setSubtasks((state) => [
+                ...state,
+                { title: "", isCompleted: false, id: uuidv4() },
+              ]);
+            }}
+            className=" w-full items-center dark:text-[#635fc7] dark:bg-white  text-white bg-[#635fc7] py-2 rounded-full"
+          >
+            + Add New Subtask
+          </button>
+        </div>
+        {/* Current status Section */}
+        <div className="mt-8 flex flex-col space-y-3 ">
+          <label className="text-sm dark:text-white text-gray-500">
+            Current status
+          </label>
+          <select
+            className="select-status flex flex-grow px-4 py-2 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#635fc7] outline-none"
+            id=""
+          >
+            {columns.map((column, index) => (
+              <option value={column.name} key={index}>
+                {column.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
     </div>
