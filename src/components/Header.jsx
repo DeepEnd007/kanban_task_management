@@ -4,6 +4,7 @@ import iconDown from "../assets/icon-chevron-down.svg";
 import iconUp from "../assets/icon-chevron-up.svg";
 import elipsis from "../assets/icon-vertical-ellipsis.svg";
 import HeaderDropDown from "./HeaderDropDown";
+import ElipsisMenu from "./ElipsisMenu";
 import AddEditBoardModal from "../modals/AddEditBoardModal";
 import AddEditTaskModal from "../modals/AddEditTaskModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +13,7 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
   const dispatch = useDispatch();
   const [openDropdown, setOpenDropdown] = useState(false);
   const [openAddEditTask, setOpenAddEditTask] = useState(false);
+  const [isElipsisOpen, setIsElipsisOpen] = useState(false);
 
   const [boardType, setBoardType] = useState("add");
   const boards = useSelector((state) => state.boards);
@@ -49,7 +51,17 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
           >
             +
           </button>
-          <img src={elipsis} alt="elipsis" className=" cursor-pointer h6" />
+          <img
+            src={elipsis}
+            onClick={() => {
+              setBoardType("edit");
+              setOpenDropdown(false);
+              setIsElipsisOpen((state) => !state);
+            }}
+            alt="elipsis"
+            className=" cursor-pointer h6"
+          />
+          {isElipsisOpen && <ElipsisMenu type="Boards" />}
         </div>
       </header>
       {openDropdown && (
@@ -68,6 +80,7 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
         <AddEditTaskModal
           setOpenAddEditTask={setOpenAddEditTask}
           device="mobile"
+          type="add"
         />
       )}
     </div>

@@ -4,7 +4,6 @@ import crossIcon from "../assets/icon-cross.svg";
 import { useDispatch } from "react-redux";
 import boardSlices from "../redux/boardsSlice";
 
-// function AddEditBoardModal(setBoardModalOpen, type) {
 function AddEditBoardModal({ setBoardModalOpen, type }) {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
