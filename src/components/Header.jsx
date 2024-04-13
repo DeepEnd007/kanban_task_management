@@ -100,7 +100,13 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
         />
       )}
 
-      {isDeleteModalOpen && <DeleteModal />}
+      {isDeleteModalOpen && (
+        <DeleteModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          title={board.name}
+          type="board"
+        />
+      )}
     </div>
   );
 }
