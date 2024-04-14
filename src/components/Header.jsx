@@ -9,6 +9,7 @@ import AddEditBoardModal from "../modals/AddEditBoardModal";
 import AddEditTaskModal from "../modals/AddEditTaskModal";
 import { useDispatch, useSelector } from "react-redux";
 import DeleteModal from "../modals/DeleteModal";
+import boardsSlice from "../redux/boardsSlice";
 
 export default function Header({ setBoardModalOpen, boardModalOpen }) {
   const dispatch = useDispatch();
@@ -28,6 +29,17 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
     setIsDeleteModalOpen(true);
     setIsElipsisOpen(false);
   };
+  const onDeleteBtnClick = () => {
+    dispatch(boardsSlice.actions.deleteBoard());
+    dispatch(boardsSlice.actions.setBoardActive({ index: 0 }));
+    setIsDeleteModalOpen(false);
+  };
+
+  const onDropdownClick = () => {
+    setOpenDropdown((state) => !state);
+    setIsElipsisOpen(false);
+    setBoardType("add");
+  };
 
   return (
     <div className="p-4 fixed left-0 bg-white dark:bg-[#2b2c37] z-50 right-0">
@@ -46,13 +58,20 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
               src={openDropdown ? iconUp : iconDown}
               alt="dropdown"
               className=" w-3 ml-2 cursor-pointer md:hidden"
-              onClick={() => setOpenDropdown((state) => !state)}
+              onClick={onDropdownClick}
             />
           </div>
         </div>
         {/*Right Side*/}
         <div className="flex space-x-4 items-center md:space-x-6">
-          <button className="hidden md:block button">+ Add New Task</button>
+          <button
+            onClick={() => {
+              setOpenAddEditTask((state) => !state);
+            }}
+            className="hidden md:block button"
+          >
+            + Add New Task
+          </button>
           <button
             onClick={() => {
               setOpenAddEditTask((state) => !state);
@@ -103,6 +122,7 @@ export default function Header({ setBoardModalOpen, boardModalOpen }) {
       {isDeleteModalOpen && (
         <DeleteModal
           setIsDeleteModalOpen={setIsDeleteModalOpen}
+          onDeleteBtnClick={onDeleteBtnClick}
           title={board.name}
           type="board"
         />
