@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AddEditBoardModal from "../modals/AddEditBoardModal";
 
 function EmptyBoard({ type }) {
@@ -21,7 +21,7 @@ function EmptyBoard({ type }) {
       {isBoardModalOpen && (
         <AddEditBoardModal
           type={type}
-          setIsBoardModalOpen={setIsBoardModalOpen}
+          setBoardModalOpen={setIsBoardModalOpen}
         />
       )}
     </div>
