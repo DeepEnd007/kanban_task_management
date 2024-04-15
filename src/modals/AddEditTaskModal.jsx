@@ -9,7 +9,8 @@ function AddEditTaskModal({
   device,
   taskIndex,
   setOpenAddEditTask,
-  pervColIndex = 0,
+  setIsTaskModalOpen,
+  prevColIndex = 0,
 }) {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
@@ -19,15 +20,29 @@ function AddEditTaskModal({
   const board = useSelector((state) => state.boards).find(
     (board) => board.isActive
   );
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const columns = board.columns;
-  const col = columns.find((col, index) => index === pervColIndex);
-  const [status, setStatus] = useState(columns[pervColIndex].name);
-  const [newColIndex, setNewColIndex] = useState(pervColIndex);
+  const col = columns.find((col, index) => index === prevColIndex);
+  const task = col ? col.tasks.find((task, index) => index === taskIndex) : [];
+
+  const [status, setStatus] = useState(columns[prevColIndex].name);
+  const [newColIndex, setNewColIndex] = useState(prevColIndex);
 
   const [subtasks, setSubtasks] = useState([
     { title: "", isCompleted: false, id: uuidv4() },
     { title: "", isCompleted: false, id: uuidv4() },
   ]);
+
+  if (type === "edit" && isFirstLoad) {
+    setSubtasks(
+      task.subtasks.map((subtask) => {
+        return { ...subtask, id: uuidv4() };
+      })
+    );
+    setTitle(task.title);
+    setDescription(task.description);
+    setIsFirstLoad(false);
+  }
 
   const onChange = (id, newValue) => {
     setSubtasks((pervState) => {
@@ -80,7 +95,7 @@ function AddEditTaskModal({
           subtasks,
           status,
           taskIndex,
-          pervColIndex,
+          prevColIndex,
           newColIndex,
         })
       );

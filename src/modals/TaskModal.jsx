@@ -4,6 +4,8 @@ import elipsis from "../assets/icon-vertical-ellipsis.svg";
 import ElipsisMenu from "../components/ElipsisMenu";
 import Subtask from "../components/Subtask";
 import boardsSlice from "../redux/boardsSlice";
+import DeleteModal from "./DeleteModal";
+import AddEditTaskModal from "./AddEditTaskModal";
 
 function TaskModal({ colIndex, taskIndex, setIsTaskModalOpen }) {
   const dispatch = useDispatch();
@@ -26,11 +28,17 @@ function TaskModal({ colIndex, taskIndex, setIsTaskModalOpen }) {
   const [newColIndex, setNewColIndex] = useState(columns.indexOf(col));
   const [elipsisMenuOpen, setElipsisMenuOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
   const setOpenEditModal = () => {
+    setIsAddTaskModalOpen(true);
+    setElipsisMenuOpen(false);
+
     //write this function later
   };
   const setOpenDeleteModal = () => {
+    setElipsisMenuOpen(false);
+    setIsDeleteModalOpen(true);
     //write this function later
   };
 
@@ -51,6 +59,11 @@ function TaskModal({ colIndex, taskIndex, setIsTaskModalOpen }) {
   const onChange = () => {
     setStatus(e.target.value);
     setNewColIndex(e.target.selectedIndex);
+  };
+  const onDeleteBtnClick = () => {
+    dispatch(boardsSlice.actions.deleteTask({ taskIndex, colIndex }));
+    setIsTaskModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -116,6 +129,23 @@ function TaskModal({ colIndex, taskIndex, setIsTaskModalOpen }) {
           </select>
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <DeleteModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          onDeleteBtnClick={onDeleteBtnClick}
+          title="{task.title}"
+          type="task"
+        />
+      )}
+      {isAddTaskModalOpen && (
+        <AddEditTaskModal
+          setOpenAddEditTask={setIsAddTaskModalOpen}
+          type="edit"
+          taskIndex={taskIndex}
+          pervColIndex={colIndex}
+          setIsTaskModalOpen={setIsTaskModalOpen}
+        />
+      )}
     </div>
   );
 }
