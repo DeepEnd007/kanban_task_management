@@ -8,7 +8,6 @@ import useDarkMode from "../Hooks/useDarkMode";
 import boardsSlice from "../redux/boardsSlice";
 
 function HeaderDropDown({ setOpenDropdown, setBoardModalOpen }) {
-  console.log("boardsSlice", boardsSlice);
   const dispatch = useDispatch();
   const [colorTheme, setTheme] = useDarkMode();
   const [darkSide, setDarkSide] = useState(
